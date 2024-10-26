@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function VideoUpload() {
   const [videoFile, setVideoFile] = useState<File | null>(null);
+  const router = useRouter();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
@@ -17,7 +19,8 @@ export default function VideoUpload() {
       // Here you would typically upload the file to your server or cloud storage
       console.log("Uploading video:", videoFile.name);
       // Implement your upload logic here
-      alert("Video uploaded successfully!");
+      // After successful upload, redirect to the analysis page
+      router.push("/analysis");
     }
   };
 
