@@ -18,7 +18,8 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center h-screen text-white">
       <h1 className="text-7xl font-bold mb-4">MediVerse</h1>
       <p className="text-2xl mb-8 animate-fade-in-down">
-        Revolutionizing Pre-Surgical Care
+        {/* Revolutionizing Pre-Surgical Analysis */}
+        Transforming Surgery Through Semi-Automatic Analysis
       </p>
       <form onSubmit={handleSubmit} className="flex space-x-4 w-full max-w-md">
         <input
