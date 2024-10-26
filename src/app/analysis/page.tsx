@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Analysis() {
   const [isRecording, setIsRecording] = useState(false);
@@ -9,8 +9,25 @@ export default function Analysis() {
   const [analysisScript, setAnalysisScript] = useState("");
   const [liveTranscription, setLiveTranscription] = useState("");
   const videoRef = useRef<HTMLVideoElement>(null);
+  const youtubePlayerRef = useRef<HTMLIFrameElement>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const videoType = searchParams.get("type");
+    const videoId = searchParams.get("videoId");
+
+    if (videoType === "youtube" && videoId) {
+      // Load YouTube video
+      if (youtubePlayerRef.current) {
+        youtubePlayerRef.current.src = `https://www.youtube.com/embed/${videoId}`;
+      }
+    } else if (videoType === "file") {
+      // Handle file upload (you may need to implement file storage and retrieval)
+      console.log("File upload handling not implemented yet");
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // Simulating computer vision analysis
@@ -76,14 +93,24 @@ export default function Analysis() {
         <h1 className="text-4xl font-bold mb-6 text-white">Live Analysis</h1>
         <div className="flex space-x-6 h-[70vh]">
           <div className="w-1/2 flex flex-col space-y-4">
-            <video
-              ref={videoRef}
-              controls
-              className="w-full h-3/4 rounded-lg object-cover"
-            >
-              <source src="/path-to-your-video.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            {searchParams.get("type") === "youtube" ? (
+              <iframe
+                ref={youtubePlayerRef}
+                className="w-full h-3/4 rounded-lg"
+                src=""
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            ) : (
+              <video
+                ref={videoRef}
+                controls
+                className="w-full h-3/4 rounded-lg object-cover"
+              >
+                <source src="/path-to-your-video.mp4" type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            )}
             <button
               onClick={handleSpeechToText}
               className="px-6 py-3 bg-gradient-to-r from-purple-400 to-blue-400 text-white rounded-md hover:from-purple-500 hover:to-blue-500 transition-all duration-300 text-lg"
