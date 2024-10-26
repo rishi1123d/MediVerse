@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef, useSearchParams } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef} from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // Mock function for NLX platform integration
 const submitToNLX = async (data: any) => {
@@ -11,7 +11,7 @@ const submitToNLX = async (data: any) => {
 };
 
 const searchParams = useSearchParams();
-const patientId = searchParams.get("patientId");
+const patientId = searchParams?.get("patientId") ?? null;
 
 export default function PreOp() {
   const [typedNotes, setTypedNotes] = useState("");
