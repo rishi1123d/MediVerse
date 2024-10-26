@@ -25,21 +25,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="h-full">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground h-full`}
       >
-        <header className="p-4 bg-transparent flex items-center">
-          <h1 className="text-2xl font-bold text-white">MediVerse</h1>
-          <Image
-            src="/logo.png"
-            alt="MediVerse Logo"
-            width={40}
-            height={40}
-            className="mr-2"
-          />
-        </header>
-        <main className="container mx-auto p-4">{children}</main>
+        <main className="h-full">{children}</main>
       </body>
     </html>
   );

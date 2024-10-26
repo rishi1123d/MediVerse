@@ -10,16 +10,12 @@ const submitToNLX = async (data: any) => {
   return { success: true, message: "Data submitted successfully" };
 };
 
-const searchParams = useSearchParams();
-const patientId = searchParams?.get("patientId") ?? null;
-
 export default function PreOp() {
   const [typedNotes, setTypedNotes] = useState("");
   const [audioNotes, setAudioNotes] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [patientFile, setPatientFile] = useState<File | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
-  const router = useRouter();
 
   const handleTypedNotesChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
@@ -62,14 +58,13 @@ export default function PreOp() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = {
-      patientId,
       typedNotes,
       audioNotes,
       patientFile: patientFile ? patientFile.name : null,
     };
     const result = await submitToNLX(formData);
     if (result.success) {
-      router.push(`/video-upload?patientId=${patientId}`);
+      window.location.href = "/video-upload";
     } else {
       alert(result.message);
     }
