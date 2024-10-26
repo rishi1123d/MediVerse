@@ -2,8 +2,37 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 260 60% 15%;
+  --foreground: 260 10% 95%;
+  --card: 260 30% 20%;
+  --card-foreground: 260 10% 95%;
+  --primary: 260 100% 70%;
+  --primary-foreground: 260 10% 95%;
+  --secondary: 260 30% 30%;
+  --secondary-foreground: 260 10% 95%;
+  --accent: 260 50% 50%;
+  --accent-foreground: 260 10% 95%;
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 260 10% 95%;
+  --border: 260 30% 30%;
+  --input: 260 30% 25%;
+  --ring: 260 100% 70%;
+}
+
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Geist Sans", Arial, sans-serif;
+  background: linear-gradient(
+    135deg,
+    hsl(260, 60%, 10%) 0%,
+    hsl(260, 50%, 15%) 25%,
+    hsl(260, 40%, 20%) 50%,
+    hsl(260, 50%, 15%) 75%,
+    hsl(260, 60%, 10%) 100%
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  color: hsl(var(--foreground));
 }
 
 @layer base {
