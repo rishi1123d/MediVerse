@@ -1,0 +1,56 @@
+PATIENT HISTORY
+Patient ID: 12345
+
+Name: John Doe
+Date of Birth: 05/15/1980
+Gender: Male
+Blood Type: O+
+
+MEDICAL HISTORY:
+- Hypertension (diagnosed 2015)
+- Type 2 Diabetes (diagnosed 2018)
+- Appendectomy (2010)
+
+CURRENT MEDICATIONS:
+1. Lisinopril 10mg daily (for hypertension)
+2. Metformin 500mg twice daily (for diabetes)
+3. Aspirin 81mg daily
+
+ALLERGIES:
+- Penicillin (causes rash)
+- Shellfish (severe reaction)
+
+FAMILY HISTORY:
+- Father: Heart disease
+- Mother: Breast cancer
+- Sibling: No significant medical conditions
+
+SOCIAL HISTORY:
+- Non-smoker
+- Occasional alcohol use (1-2 drinks per week)
+- Occupation: Office manager
+
+RECENT SYMPTOMS:
+Patient reports intermittent abdominal pain in the upper right quadrant for the past 3 weeks. Pain is described as dull and aching, rated 4/10 on pain scale. Associated with nausea but no vomiting. No fever or chills reported.
+
+PHYSICAL EXAMINATION:
+- Height: 5'10" (178 cm)
+- Weight: 180 lbs (81.6 kg)
+- BMI: 25.8
+- Blood Pressure: 130/85 mmHg
+- Heart Rate: 72 bpm
+- Respiratory Rate: 14 breaths/min
+- Temperature: 98.6°F (37°C)
+
+Abdomen: Soft, mild tenderness in right upper quadrant. No rebound tenderness or guarding. No palpable masses.
+
+PLAN:
+- Abdominal ultrasound scheduled for 06/15/2023
+- Follow-up appointment in 2 weeks
+- Continue current medications
+- Advised to maintain food diary and avoid fatty foods
+
+Dr. Emily Johnson
+Internal Medicine
+License #: MD12345
+Date: 06/01/2023

@@ -11,6 +11,10 @@ export default function Compilation() {
     endoscopyAnalysis: [],
     recommendations: [],
     nextSteps: [],
+    patientHistory: "",
+    vitalSigns: {},
+    labResults: {},
+    medicationList: [],
   });
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -21,24 +25,63 @@ export default function Compilation() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setReport({
         patientId: "12345",
-        preOpNotes: "Patient presents with...",
-        audioTranscription: "The patient's vital signs are...",
+        preOpNotes:
+          "Patient presents with persistent abdominal pain and nausea. History of GERD and family history of colon cancer.",
+        audioTranscription:
+          "The patient's vital signs are stable. BP 120/80, HR 72, RR 16, Temp 98.6°F. Patient reports pain level of 6/10 in the upper right quadrant.",
         endoscopyAnalysis: [
-          { timestamp: "00:05", description: "Possible inflammation" },
-          { timestamp: "00:12", description: "Unusual tissue formation" },
+          {
+            timestamp: "00:05",
+            description: "Esophageal mucosa appears normal",
+          },
+          {
+            timestamp: "00:12",
+            description:
+              "Gastroesophageal junction shows signs of inflammation",
+          },
           {
             timestamp: "00:28",
-            description: "Area requiring further examination",
+            description:
+              "Suspicious lesion detected in the gastric antrum, approximately 1cm in diameter",
+          },
+          {
+            timestamp: "00:45",
+            description: "Duodenum appears normal, no signs of ulceration",
           },
         ],
         recommendations: [
-          "Further examination of detected anomalies",
-          "Follow-up tests recommended",
-          "Consult with specialist regarding unusual tissue formation",
+          "Biopsy of the gastric antrum lesion",
+          "Increase PPI dosage to manage GERD symptoms",
+          "Schedule follow-up endoscopy in 3 months",
+          "Refer to gastroenterologist for further evaluation",
         ],
         nextSteps: [
-          "Schedule follow-up appointment",
-          "Prepare detailed briefing for surgical team",
+          "Discuss biopsy results with patient",
+          "Adjust medication regimen based on biopsy findings",
+          "Provide patient education on dietary modifications for GERD management",
+          "Schedule follow-up appointment in 2 weeks",
+        ],
+        patientHistory:
+          "45-year-old male with 5-year history of GERD. No previous surgeries. Non-smoker, occasional alcohol use.",
+        vitalSigns: {
+          bloodPressure: "120/80 mmHg",
+          heartRate: "72 bpm",
+          respiratoryRate: "16 breaths/min",
+          temperature: "98.6°F (37°C)",
+          oxygenSaturation: "98% on room air",
+        },
+        labResults: {
+          hgb: "14.2 g/dL",
+          wbc: "7.5 x 10^9/L",
+          platelets: "250 x 10^9/L",
+          creatinine: "0.9 mg/dL",
+          alt: "25 U/L",
+          ast: "22 U/L",
+        },
+        medicationList: [
+          "Omeprazole 20mg daily",
+          "Famotidine 20mg as needed",
+          "Multivitamin daily",
         ],
       });
       setIsLoading(false);
@@ -88,12 +131,48 @@ export default function Compilation() {
                   Patient ID: {report.patientId}
                 </h2>
                 <p>
-                  <strong>Pre-Op Notes:</strong> {report.preOpNotes}
+                  <strong>Patient History:</strong> {report.patientHistory}
                 </p>
-                <p>
-                  <strong>Audio Transcription:</strong>{" "}
-                  {report.audioTranscription}
-                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Vital Signs:</h3>
+                <ul className="list-disc list-inside">
+                  {Object.entries(report.vitalSigns).map(([key, value]) => (
+                    <li key={key}>
+                      {key.charAt(0).toUpperCase() + key.slice(1)}: {value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Pre-Op Notes:</h3>
+                <p>{report.preOpNotes}</p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">
+                  Audio Transcription:
+                </h3>
+                <p>{report.audioTranscription}</p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Lab Results:</h3>
+                <ul className="list-disc list-inside">
+                  {Object.entries(report.labResults).map(([key, value]) => (
+                    <li key={key}>
+                      {key.toUpperCase()}: {value}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">
+                  Current Medications:
+                </h3>
+                <ul className="list-disc list-inside">
+                  {report.medicationList.map((med, index) => (
+                    <li key={index}>{med}</li>
+                  ))}
+                </ul>
               </div>
               <div>
                 <h3 className="text-xl font-semibold mb-2">
@@ -102,7 +181,7 @@ export default function Compilation() {
                 <ul className="list-disc list-inside">
                   {report.endoscopyAnalysis.map((item, index) => (
                     <li key={index}>
-                      Anomaly detected at {item.timestamp} - {item.description}
+                      {item.timestamp} - {item.description}
                     </li>
                   ))}
                 </ul>
