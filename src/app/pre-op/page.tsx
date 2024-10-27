@@ -44,67 +44,97 @@ export default function PreOp() {
     }
   };
 
-  const uploadAudio = async (audioBlob: Blob) => {
-    setIsProcessing(true);
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "recorded_audio.wav");
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setPatientFile(event.target.files[0]);
+    } else {
+      setPatientFile(null);
+    }
+  };
 
-    try {
-      const response = await fetch("http://localhost:8000/api/transcribe", {
-        method: "POST",
-        body: formData,
-      });
-
-      const result = await response.json();
-      
-      if (result.success) {
-        setTranscribedText(result.text);
-        toast.success("Audio transcribed and saved successfully!");
-      } else {
-        throw new Error(result.error || "Failed to process audio");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast.error("Failed to process audio");
-    } finally {
-      setIsProcessing(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = {
+      typedNotes,
+      audioNotes,
+      patientFile: patientFile ? patientFile.name : null,
+    };
+    const result = await submitToNLX(formData);
+    if (result.success) {
+      window.location.href = "/video-upload";
+    } else {
+      alert(result.message);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6 text-white">
-        Pre-Op Data Collection
-      </h1>
-      
-      <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
-        <h2 className="text-xl font-semibold mb-3 text-white">Audio Recording</h2>
-        <div className="space-y-4">
-          <button
-            onClick={handleSpeechToText}
-            disabled={isProcessing}
-            className={`px-6 py-2 rounded-md transition-all duration-300 ${
-              isRecording
-                ? "bg-red-500 hover:bg-red-600"
-                : "bg-blue-500 hover:bg-blue-600"
-            } text-white font-semibold disabled:opacity-50`}
-          >
-            {isProcessing 
-              ? "Processing..." 
-              : isRecording 
-                ? "Stop Recording" 
-                : "Start Recording"}
-          </button>
-          
-          {transcribedText && (
-            <div className="mt-4">
-              <h3 className="text-white font-semibold mb-2">Transcribed Text:</h3>
-              <div className="bg-white bg-opacity-20 p-3 rounded-md text-white">
-                {transcribedText}
-              </div>
+    <div className="flex flex-col items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full space-y-8">
+        <h1 className="text-3xl font-bold mb-6 text-white">
+          Pre-Op Data Collection
+        </h1>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <h2 className="text-xl font-semibold mb-3 text-white">
+              Typed Notes
+            </h2>
+            <textarea
+              placeholder="Enter pre-op notes here"
+              value={typedNotes}
+              onChange={handleTypedNotesChange}
+              className="w-full p-3 bg-white bg-opacity-20 text-white border border-white border-opacity-30 rounded-md focus:ring-2 focus:ring-white focus:ring-opacity-50 placeholder-white placeholder-opacity-50"
+              rows={5}
+            />
+          </div>
+
+          <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <h2 className="text-xl font-semibold mb-3 text-white">
+              Audio Notes
+            </h2>
+            <div className="flex items-center space-x-2">
+              <button
+                type="button"
+                onClick={handleSpeechToText}
+                className={`px-6 py-2 rounded-md transition-all duration-300 bg-gradient-to-r from-purple-400 to-blue-400 text-white font-semibold hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-sm`}
+              >
+                {isRecording ? "Stop Recording" : "Start Recording"}
+              </button>
+              {audioNotes && (
+                <audio src={audioNotes} controls className="mt-3" />
+              )}
             </div>
-          )}
-        </div>
+          </div>
+
+          <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <h2 className="text-xl font-semibold mb-3 text-white">
+              Patient File Upload
+            </h2>
+            <div className="relative">
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="hidden"
+                id="patient-file-upload"
+              />
+              <label
+                htmlFor="patient-file-upload"
+                className="cursor-pointer inline-flex items-center px-4 py-2 bg-white bg-opacity-80 text-gray-800 rounded-md hover:bg-opacity-100 transition-all duration-300"
+              >
+                Choose File
+              </label>
+              <span className="ml-3 text-white">
+                {patientFile ? patientFile.name : "No file chosen"}
+              </span>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full py-3 bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white rounded-md hover:from-purple-600 hover:via-purple-700 hover:to-purple-800 transition-all duration-300 shadow-md hover:shadow-purple-500/30 backdrop-blur-sm border border-purple-400/20 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+          >
+            Submit Pre-Op Data
+          </button>
+        </form>
       </div>
     </div>
   );
