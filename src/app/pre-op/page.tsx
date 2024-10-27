@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef} from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 
 // Mock function for NLX platform integration
 const submitToNLX = async (data: any) => {

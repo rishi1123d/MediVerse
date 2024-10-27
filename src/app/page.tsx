@@ -5,12 +5,45 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [patientId, setPatientId] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
+
     if (patientId) {
-      router.push(`/pre-op?patientId=${patientId}`);
+      setLoading(true);
+      setError("");
+
+      try {
+        // Replace with your backend URL, e.g., deployed backend or localhost
+        const response = await fetch(`http://127.0.0.1:8000/api/getPatient?patientId=${patientId}`);
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch patient data.");
+        }
+
+        const data = await response.json();
+
+        // Check if the patient data was found
+        if (data.patient) {
+          // Store patient data in sessionStorage for further use in other components/pages
+          sessionStorage.setItem("patientData", JSON.stringify(data.patient));
+
+          // Navigate to the pre-op page
+          router.push(`/pre-op?patientId=${patientId}`);
+        } else {
+          setError("Patient not found. Please check the ID and try again.");
+        }
+      } catch (err) {
+        console.error("Error fetching patient data:", err);
+        setError("There was an error fetching the patient data.");
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      setError("Patient ID cannot be empty.");
     }
   };
 
@@ -30,11 +63,13 @@ export default function Home() {
         />
         <button
           type="submit"
+          disabled={loading}
           className="px-6 py-2 bg-gradient-to-r from-purple-400 to-blue-400 text-white rounded-md hover:from-purple-500 hover:to-blue-500 transition-all duration-300 font-semibold transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
         >
-          Start Pre-Op
+          {loading ? "Loading..." : "Fetch Patient"}
         </button>
       </form>
+      {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
 }
