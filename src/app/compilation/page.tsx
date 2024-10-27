@@ -12,12 +12,12 @@ export default function Compilation() {
     recommendations: [],
     nextSteps: [],
   });
+  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Simulating report generation
     const generateReport = async () => {
-      // In a real scenario, this would fetch data from your database or API
+      setIsLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       setReport({
         patientId: "12345",
@@ -41,14 +41,29 @@ export default function Compilation() {
           "Prepare detailed briefing for surgical team",
         ],
       });
+      setIsLoading(false);
     };
 
     generateReport();
   }, []);
 
   const handleDownloadPDF = () => {
-    // In a real scenario, this would generate and download a PDF
-    alert("PDF download functionality would be implemented here.");
+    const reportContent = `
+      Patient ID: ${report.patientId}
+      Pre-Op Notes: ${report.preOpNotes}
+      Audio Transcription: ${report.audioTranscription}
+      Endoscopy Analysis: ${report.endoscopyAnalysis
+        .map((item) => `${item.timestamp} - ${item.description}`)
+        .join("\n")}
+      Recommendations: ${report.recommendations.join("\n")}
+      Next Steps: ${report.nextSteps.join("\n")}
+    `;
+    const blob = new Blob([reportContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `report_${report.patientId}.txt`;
+    link.click();
   };
 
   const handleNewPatient = () => {
@@ -61,50 +76,56 @@ export default function Compilation() {
         <h1 className="text-4xl font-bold mb-6 text-white text-center">
           Compilation Report
         </h1>
-        <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
-          <div className="space-y-6 text-white">
-            <div>
-              <h2 className="text-2xl font-semibold mb-2">
-                Patient ID: {report.patientId}
-              </h2>
-              <p>
-                <strong>Pre-Op Notes:</strong> {report.preOpNotes}
-              </p>
-              <p>
-                <strong>Audio Transcription:</strong>{" "}
-                {report.audioTranscription}
-              </p>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">
-                Endoscopy Analysis:
-              </h3>
-              <ul className="list-disc list-inside">
-                {report.endoscopyAnalysis.map((item, index) => (
-                  <li key={index}>
-                    Anomaly detected at {item.timestamp} - {item.description}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Recommendations:</h3>
-              <ol className="list-decimal list-inside">
-                {report.recommendations.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ol>
-            </div>
-            <div>
-              <h3 className="text-xl font-semibold mb-2">Next Steps:</h3>
-              <ul className="list-disc list-inside">
-                {report.nextSteps.map((item, index) => (
-                  <li key={index}>{item}</li>
-                ))}
-              </ul>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+          </div>
+        ) : (
+          <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+            <div className="space-y-6 text-white">
+              <div>
+                <h2 className="text-2xl font-semibold mb-2">
+                  Patient ID: {report.patientId}
+                </h2>
+                <p>
+                  <strong>Pre-Op Notes:</strong> {report.preOpNotes}
+                </p>
+                <p>
+                  <strong>Audio Transcription:</strong>{" "}
+                  {report.audioTranscription}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">
+                  Endoscopy Analysis:
+                </h3>
+                <ul className="list-disc list-inside">
+                  {report.endoscopyAnalysis.map((item, index) => (
+                    <li key={index}>
+                      Anomaly detected at {item.timestamp} - {item.description}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Recommendations:</h3>
+                <ol className="list-decimal list-inside">
+                  {report.recommendations.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ol>
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2">Next Steps:</h3>
+                <ul className="list-disc list-inside">
+                  {report.nextSteps.map((item, index) => (
+                    <li key={index}>{item}</li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="flex justify-center space-x-4">
           <button
             onClick={handleDownloadPDF}

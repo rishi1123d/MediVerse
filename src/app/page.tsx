@@ -15,7 +15,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen text-white">
+    <div className="flex flex-col items-center justify-center h-screen text-white animate-fadeIn">
       <h1 className="text-7xl font-bold mb-4">MediVerse</h1>
       <p className="text-2xl mb-8 animate-fade-in-down">
         {/* Revolutionizing Pre-Surgical Analysis */}
