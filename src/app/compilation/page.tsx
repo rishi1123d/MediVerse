@@ -4,7 +4,14 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function Compilation() {
-  const [report, setReport] = useState("");
+  const [report, setReport] = useState({
+    patientId: "",
+    preOpNotes: "",
+    audioTranscription: "",
+    endoscopyAnalysis: [],
+    recommendations: [],
+    nextSteps: [],
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -12,24 +19,28 @@ export default function Compilation() {
     const generateReport = async () => {
       // In a real scenario, this would fetch data from your database or API
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      setReport(`
-Patient ID: 12345
-Pre-Op Notes: Patient presents with...
-Audio Transcription: The patient's vital signs are...
-Endoscopy Analysis:
-- Anomaly detected at 00:05 - Possible inflammation
-- Anomaly detected at 00:12 - Unusual tissue formation
-- Anomaly detected at 00:28 - Area requiring further examination
-
-Recommendations:
-1. Further examination of detected anomalies
-2. Follow-up tests recommended
-3. Consult with specialist regarding unusual tissue formation
-
-Next Steps:
-- Schedule follow-up appointment
-- Prepare detailed briefing for surgical team
-      `);
+      setReport({
+        patientId: "12345",
+        preOpNotes: "Patient presents with...",
+        audioTranscription: "The patient's vital signs are...",
+        endoscopyAnalysis: [
+          { timestamp: "00:05", description: "Possible inflammation" },
+          { timestamp: "00:12", description: "Unusual tissue formation" },
+          {
+            timestamp: "00:28",
+            description: "Area requiring further examination",
+          },
+        ],
+        recommendations: [
+          "Further examination of detected anomalies",
+          "Follow-up tests recommended",
+          "Consult with specialist regarding unusual tissue formation",
+        ],
+        nextSteps: [
+          "Schedule follow-up appointment",
+          "Prepare detailed briefing for surgical team",
+        ],
+      });
     };
 
     generateReport();
@@ -51,9 +62,48 @@ Next Steps:
           Compilation Report
         </h1>
         <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
-          <pre className="text-white whitespace-pre-wrap font-mono text-sm">
-            {report}
-          </pre>
+          <div className="space-y-6 text-white">
+            <div>
+              <h2 className="text-2xl font-semibold mb-2">
+                Patient ID: {report.patientId}
+              </h2>
+              <p>
+                <strong>Pre-Op Notes:</strong> {report.preOpNotes}
+              </p>
+              <p>
+                <strong>Audio Transcription:</strong>{" "}
+                {report.audioTranscription}
+              </p>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">
+                Endoscopy Analysis:
+              </h3>
+              <ul className="list-disc list-inside">
+                {report.endoscopyAnalysis.map((item, index) => (
+                  <li key={index}>
+                    Anomaly detected at {item.timestamp} - {item.description}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Recommendations:</h3>
+              <ol className="list-decimal list-inside">
+                {report.recommendations.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ol>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-2">Next Steps:</h3>
+              <ul className="list-disc list-inside">
+                {report.nextSteps.map((item, index) => (
+                  <li key={index}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
         <div className="flex justify-center space-x-4">
           <button

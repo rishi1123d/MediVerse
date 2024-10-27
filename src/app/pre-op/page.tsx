@@ -29,9 +29,29 @@ export default function PreOp() {
           audio: true,
         });
         mediaRecorder.current = new MediaRecorder(stream);
-        mediaRecorder.current.ondataavailable = (event) => {
-          const audioUrl = URL.createObjectURL(event.data);
-          setAudioNotes(audioUrl);
+        mediaRecorder.current.ondataavailable = async (event) => {
+          const audioBlob = event.data;
+          const formData = new FormData();
+          formData.append("audio", audioBlob, "recording.webm");
+
+          try {
+            const response = await fetch("http://localhost:8000/upload-audio", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (response.ok) {
+              const result = await response.json();
+              console.log("Audio file uploaded successfully:", result);
+              // You can still create a local URL for immediate playback if needed
+              const audioUrl = URL.createObjectURL(audioBlob);
+              setAudioNotes(audioUrl);
+            } else {
+              console.error("Failed to upload audio file");
+            }
+          } catch (error) {
+            console.error("Error uploading audio file:", error);
+          }
         };
         mediaRecorder.current.start();
         setIsRecording(true);
