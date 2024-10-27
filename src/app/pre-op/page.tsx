@@ -1,13 +1,22 @@
-"use client";
-
 import { useState, useRef } from "react";
-import { toast } from "react-hot-toast";
+
+const submitToNLX = async (data: any) => {
+  console.log("Submitting to NLX:", data);
+  return { success: true, message: "Data submitted successfully" };
+};
 
 export default function PreOp() {
+  const [typedNotes, setTypedNotes] = useState("");
+  const [audioNotes, setAudioNotes] = useState("");
   const [isRecording, setIsRecording] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [patientFile, setPatientFile] = useState<File | null>(null);
   const [transcribedText, setTranscribedText] = useState("");
   const mediaRecorder = useRef<MediaRecorder | null>(null);
+  const audioChunks = useRef<Blob[]>([]);
+
+  const handleTypedNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTypedNotes(e.target.value);
+  };
 
   const handleSpeechToText = async () => {
     if (!isRecording) {
@@ -17,29 +26,54 @@ export default function PreOp() {
         });
         
         mediaRecorder.current = new MediaRecorder(stream);
-        const audioChunks: BlobPart[] = [];
+        audioChunks.current = [];
 
         mediaRecorder.current.ondataavailable = (event) => {
-          audioChunks.push(event.data);
+          if (event.data.size > 0) {
+            audioChunks.current.push(event.data);
+          }
         };
 
         mediaRecorder.current.onstop = async () => {
-          const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
-          await uploadAudio(audioBlob);
+          const audioBlob = new Blob(audioChunks.current, { type: 'audio/wav' });
+          const audioUrl = URL.createObjectURL(audioBlob);
+          setAudioNotes(audioUrl);
+
+          // Create FormData and send to backend
+          const formData = new FormData();
+          formData.append('audio', audioBlob, 'audio.wav');
+
+          try {
+            const response = await fetch('http://localhost:8000/api/transcribe', {
+              method: 'POST',
+              body: formData,
+            });
+
+            const data = await response.json();
+            if (data.success) {
+              setTranscribedText(data.text);
+              setTypedNotes(prev => prev + (prev ? '\n\n' : '') + data.text);
+            } else {
+              console.error('Transcription failed:', data.error);
+              alert('Failed to transcribe audio. Please try again.');
+            }
+          } catch (error) {
+            console.error('Error sending audio to backend:', error);
+            alert('Error sending audio to server. Please try again.');
+          }
         };
 
         mediaRecorder.current.start();
         setIsRecording(true);
-        toast.success("Recording started");
       } catch (error) {
         console.error("Error accessing microphone:", error);
-        toast.error("Failed to access microphone");
+        alert('Error accessing microphone. Please ensure microphone permissions are granted.');
       }
     } else {
       if (mediaRecorder.current) {
         mediaRecorder.current.stop();
         setIsRecording(false);
-        toast.success("Recording stopped");
+        stream?.getTracks().forEach(track => track.stop());
       }
     }
   };
@@ -57,6 +91,7 @@ export default function PreOp() {
     const formData = {
       typedNotes,
       audioNotes,
+      transcribedText,
       patientFile: patientFile ? patientFile.name : null,
     };
     const result = await submitToNLX(formData);
@@ -91,16 +126,28 @@ export default function PreOp() {
             <h2 className="text-xl font-semibold mb-3 text-white">
               Audio Notes
             </h2>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col space-y-4">
               <button
                 type="button"
                 onClick={handleSpeechToText}
-                className={`px-6 py-2 rounded-md transition-all duration-300 bg-gradient-to-r from-purple-400 to-blue-400 text-white font-semibold hover:from-purple-500 hover:to-blue-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-sm`}
+                className={`px-6 py-2 rounded-md transition-all duration-300 ${
+                  isRecording 
+                    ? 'bg-red-500 hover:bg-red-600' 
+                    : 'bg-gradient-to-r from-purple-400 to-blue-400 hover:from-purple-500 hover:to-blue-500'
+                } text-white font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 shadow-[inset_0_1px_1px_rgba(255,255,255,0.3)] backdrop-blur-sm`}
               >
                 {isRecording ? "Stop Recording" : "Start Recording"}
               </button>
               {audioNotes && (
-                <audio src={audioNotes} controls className="mt-3" />
+                <div className="space-y-2">
+                  <audio src={audioNotes} controls className="w-full" />
+                  {transcribedText && (
+                    <div className="text-white text-sm bg-white bg-opacity-20 p-3 rounded">
+                      <p className="font-semibold mb-1">Transcription:</p>
+                      <p>{transcribedText}</p>
+                    </div>
+                  )}
+                </div>
               )}
             </div>
           </div>
