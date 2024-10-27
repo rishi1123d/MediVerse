@@ -11,11 +11,19 @@ const storage = multer.diskStorage({
     cb(null, "uploads/"); // Make sure this directory exists
   },
   filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, Date.now() + ".wav");
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    if (file.mimetype !== "audio/wav") {
+      return cb(new Error("Only .wav files are allowed!"), false);
+    }
+    cb(null, true);
+  },
+});
 
 app.post("/upload-audio", upload.single("audio"), (req, res) => {
   if (req.file) {

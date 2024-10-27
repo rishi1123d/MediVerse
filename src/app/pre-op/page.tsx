@@ -30,9 +30,9 @@ export default function PreOp() {
         });
         mediaRecorder.current = new MediaRecorder(stream);
         mediaRecorder.current.ondataavailable = async (event) => {
-          const audioBlob = event.data;
+          const audioBlob = new Blob([event.data], { type: "audio/wav" });
           const formData = new FormData();
-          formData.append("audio", audioBlob, "recording.webm");
+          formData.append("audio", audioBlob, "recording.wav");
 
           try {
             const response = await fetch("http://localhost:8000/upload-audio", {
