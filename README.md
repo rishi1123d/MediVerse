@@ -1,5 +1,7 @@
 # MediVerse
 
+<img width="1799" alt="MediVerse original" src="https://github.com/user-attachments/assets/e80bf62a-249c-4be7-9ca9-b7058dd8c9e7">
+
 **MediVerse** is an AI-powered pre-surgical assistant designed to streamline the pre-surgical process, helping healthcare providers improve patient outcomes and reduce physician burnout. By capturing and organizing critical pre-op information, MediVerse automates and simplifies the workflow, enhancing efficiency and accuracy.
 
 ## Inspiration
