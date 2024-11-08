@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MediVerse
 
-## Getting Started
+**MediVerse** is an AI-powered pre-surgical assistant designed to streamline the pre-surgical process, helping healthcare providers improve patient outcomes and reduce physician burnout. By capturing and organizing critical pre-op information, MediVerse automates and simplifies the workflow, enhancing efficiency and accuracy.
 
-First, run the development server:
+## Inspiration
+The inspiration for MediVerse came from observing the time-consuming and fragmented pre-surgical process. We saw an opportunity to leverage advanced AI and cloud technologies to make this phase of patient care more efficient, potentially improving outcomes and reducing physician burnout.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
+- **Multi-Language Pre-Op Capture:** Captures pre-op notes through voice or text in multiple languages.
+- **Endoscopy Video Analysis:** Uses computer vision to detect anomalies in endoscopy videos.
+- **Real-Time Transcription:** Automatically transcribes spoken observations during procedures.
+- **Comprehensive Reporting:** Compiles all data into a structured report using Google Cloud's BigQuery.
+- **Intuitive Workflow:** Provides a smooth workflow from initial data collection to final report generation.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech Stack
+- **Frontend:** Next.js
+- **Backend:** Express.js, Node.js
+- **AI and ML Tools:** NLX for natural language processing, OpenCV for computer vision
+- **Cloud Services:** Google Cloud (BigQuery, Storage), Google’s Speech-to-Text API
+- **Other:** Python for data processing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How It Works
+1. **Data Capture:** Healthcare providers input pre-op notes via voice or text in multiple languages.
+2. **Video Analysis:** Analyzes endoscopy video feeds using computer vision for real-time anomaly detection.
+3. **Transcription:** Transcribes real-time spoken observations during procedures to reduce manual entry.
+4. **Data Organization:** Compiles and organizes data into a report, accessible for the healthcare team.
+5. **Workflow Management:** Provides an end-to-end solution from data capture to comprehensive reporting.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Challenges
+- Integrating multiple AI tools (NLX, OpenCV, Speech-to-Text) seamlessly.
+- Ensuring real-time processing and analysis of endoscopy videos.
+- Maintaining data privacy and security within cloud services.
+- Creating an intuitive UI for busy medical professionals.
+- Handling multi-language support for voice inputs and transcriptions.
 
-## Learn More
+## Accomplishments
+- Developed a unified platform to streamline the pre-surgical process.
+- Successfully integrated computer vision for real-time video analysis.
+- Implemented a multi-language voice input system.
+- Created an intuitive UI with minimal training requirements for medical staff.
+- Leveraged cloud solutions to enable efficient and scalable data processing.
 
-To learn more about Next.js, take a look at the following resources:
+## What We Learned
+- Gained insights into healthcare workflows and the need for user-centered design.
+- Developed integration techniques for multiple AI and cloud services.
+- Learned the importance of managing sensitive medical data securely.
+- Explored the potential of AI to enhance healthcare efficiency.
+- Recognized the value of cross-disciplinary collaboration in healthtech.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## What's Next for MediVerse
+1. Expanding computer vision capabilities to detect a broader range of anomalies.
+2. Integrating with Electronic Health Record (EHR) systems for seamless data flow.
+3. Developing a mobile application for remote access.
+4. Implementing AI-driven predictive analytics for surgical outcomes.
+5. Conducting clinical trials to validate the system’s efficacy.
+6. Exploring partnerships with medical device manufacturers for direct integration.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Links
+- **Devpost:** [MediVerse on Devpost](https://devpost.com/software/mediverse-rqwnpj)
+- **GitHub Repository:** [MediVerse GitHub Repository](https://github.com/rishi1123d/MediVerse)
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**MediVerse** is on a mission to enhance the pre-surgical experience for healthcare providers and patients alike, harnessing the power of AI and cloud technology to make healthcare more efficient and reliable.
