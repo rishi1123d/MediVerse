@@ -12,6 +12,18 @@ interface Anomaly {
   color: string;
 }
 
+interface PatientData {
+  id: string;
+  name: string;
+  age: number;
+  gender: string;
+  procedure: string;
+  medicalHistory: string[];
+  allergies: string[];
+  medications: string[];
+  riskFactors: string[];
+}
+
 function FinalReportContent() {
   const searchParams = useSearchParams();
   const patientId = searchParams?.get("patientId") ?? null;
@@ -20,6 +32,34 @@ function FinalReportContent() {
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  // Sample patient data
+  const patientData: PatientData = {
+    id: patientId || "P12345",
+    name: "John Smith",
+    age: 45,
+    gender: "Male",
+    procedure: "Laparoscopic Cholecystectomy",
+    medicalHistory: [
+      "Hypertension (controlled)",
+      "Type 2 Diabetes",
+      "Previous appendectomy (2015)"
+    ],
+    allergies: [
+      "Penicillin",
+      "Latex"
+    ],
+    medications: [
+      "Metformin 500mg BID",
+      "Lisinopril 10mg daily",
+      "Aspirin 81mg daily"
+    ],
+    riskFactors: [
+      "BMI: 32",
+      "Smoking history: 10 pack-years",
+      "Family history of cardiovascular disease"
+    ]
+  };
 
   // Mock data for the final report
   const detectedAnomalies: Anomaly[] = [
@@ -88,10 +128,61 @@ function FinalReportContent() {
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6 text-white">Surgical Analysis Report</h1>
       <div className="bg-white bg-opacity-10 p-6 rounded-lg shadow-lg backdrop-blur-sm">
+        {/* Patient Information Section */}
         <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-white">
-            Patient ID: {patientId || "Not specified"}
-          </h2>
+          <h2 className="text-xl font-semibold mb-4 text-white">Patient Information</h2>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="bg-white bg-opacity-5 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-white mb-2">Basic Information</h3>
+              <div className="space-y-2 text-white">
+                <p><span className="font-semibold">Patient ID:</span> {patientData.id}</p>
+                <p><span className="font-semibold">Name:</span> {patientData.name}</p>
+                <p><span className="font-semibold">Age:</span> {patientData.age}</p>
+                <p><span className="font-semibold">Gender:</span> {patientData.gender}</p>
+                <p><span className="font-semibold">Procedure:</span> {patientData.procedure}</p>
+              </div>
+            </div>
+            <div className="bg-white bg-opacity-5 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-white mb-2">Medical History</h3>
+              <div className="space-y-2 text-white">
+                <p className="font-semibold">Conditions:</p>
+                <ul className="list-disc list-inside">
+                  {patientData.medicalHistory.map((condition, index) => (
+                    <li key={index}>{condition}</li>
+                  ))}
+                </ul>
+                <p className="font-semibold mt-2">Allergies:</p>
+                <ul className="list-disc list-inside">
+                  {patientData.allergies.map((allergy, index) => (
+                    <li key={index}>{allergy}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-white bg-opacity-5 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-white mb-2">Current Medications</h3>
+              <ul className="list-disc list-inside text-white">
+                {patientData.medications.map((med, index) => (
+                  <li key={index}>{med}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-white bg-opacity-5 p-4 rounded-lg">
+              <h3 className="text-lg font-semibold text-white mb-2">Risk Factors</h3>
+              <ul className="list-disc list-inside text-white">
+                {patientData.riskFactors.map((factor, index) => (
+                  <li key={index}>{factor}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Anomaly Analysis Section */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4 text-white">Anomaly Analysis</h2>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div className="bg-red-500 bg-opacity-20 p-4 rounded-lg">
               <h3 className="text-lg font-semibold text-white mb-2">Critical Anomalies</h3>
