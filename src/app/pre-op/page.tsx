@@ -1,19 +1,26 @@
 "use client";
 
-import { useState, useRef, useSearchParams } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+
+interface PreOpData {
+  patientId: string | null;
+  typedNotes: string;
+  audioNotes: string;
+  patientFile: string | null;
+}
 
 // Mock function for NLX platform integration
-const submitToNLX = async (data: any) => {
+const submitToNLX = async (data: PreOpData) => {
   console.log("Submitting to NLX:", data);
   // In a real scenario, this would send data to the NLX platform
   return { success: true, message: "Data submitted successfully" };
 };
 
-const searchParams = useSearchParams();
-const patientId = searchParams.get("patientId");
-
-export default function PreOp() {
+function PreOpContent() {
+  const searchParams = useSearchParams();
+  const patientId = searchParams?.get("patientId") ?? null;
   const [typedNotes, setTypedNotes] = useState("");
   const [audioNotes, setAudioNotes] = useState("");
   const [isRecording, setIsRecording] = useState(false);
@@ -137,5 +144,13 @@ export default function PreOp() {
         </button>
       </form>
     </div>
+  );
+}
+
+export default function PreOp() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <PreOpContent />
+    </Suspense>
   );
 }
